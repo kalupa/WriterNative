@@ -9,113 +9,114 @@ var React = require('react-native');
 
 var {
   AppRegistry,
-  Image,
-  ListView,
+  // Image,
+  // ListView,
+  ScrollView,
   StyleSheet,
   Text,
   View
 } = React;
 
-var REQUEST_URL = [
-  'https://raw.githubusercontent.com',
-  '/facebook/react-native/',
-  'master/docs/MoviesExample.json'
-].join('');
-
 var WriterNative = React.createClass({
 
   getInitialState: function() {
     return {
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2
-      }),
-      loaded: false
     };
+    // return {
+    //   dataSource: new ListView.DataSource({
+    //     rowHasChanged: (row1, row2) => row1 !== row2
+    //   }),
+    //   loaded: false
+    // };
   },
 
   componentDidMount: function() {
-    this.fetchData();
-  },
-
-  fetchData: function() {
-    fetch(REQUEST_URL)
-      .then(response => response.json())
-      .then((responseData) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(responseData.movies),
-          loaded: true
-        });
-      })
-      .done();
+    // this.fetchData();
   },
 
   renderLoadingView: function() {
     return (
       <View style={styles.container}>
-        <Text>
-          Loading movies..
-        </Text>
-      </View>
-    );
-  },
-
-  renderMovie: function(movie) {
-    return (
-      <View style={styles.container}>
-        <Image
-          source={{uri: movie.posters.thumbnail}}
-          style={styles.thumbnail}
-        />
-        <View style={styles.rightContainer}>
-          <Text style={styles.title}>{movie.title}</Text>
-          <Text style={styles.year}>{movie.year}</Text>
-        </View>
+        <Text> Loading ... </Text>
       </View>
     );
   },
 
   render: function() {
-    if (!this.state.loaded) {
-      return this.renderLoadingView();
-    }
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={this.renderMovie}
-        style={styles.listView}
-      />
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.writingText}>{THUMBS.map(createThumbRow)}</Text>
+      </ScrollView>
     );
   }
 
 });
 
+// var Thumb = React.createClass({
+//   shouldComponentUpdate: function(nextProps, nextState) {
+//     return false;
+//   },
+//   render: function() {
+//     return (
+//       <View style={styles.button}>
+//         <Image source={{uri:this.props.uri}} style={styles.img} />
+//       </View>
+//     );
+//   }
+// });
+
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF'
   },
-  rightContainer: {
-    flex: 1
+  scrollView: {
+    backgroundColor: '#F5FCFF',
+    // backgroundColor: '#6A85B1',
+    height: 300,
+    padding: 16
   },
-  thumbnail: {
-    width: 53,
-    height: 81
+  writingText: {
+    fontFamily: 'Inconsolata-dz'
   },
-  listView: {
-    paddingTop: 20,
-    backgroundColor: '#F5FCFF'
+  button: {
+    margin: 7,
+    padding: 5,
+    alignItems: 'center',
+    backgroundColor: '#eaeaea',
+    borderRadius: 3
   },
-  title: {
-    fontSize: 20,
-    marginBottom: 8,
-    textAlign: 'center'
+  buttonContents: {
+    flexDirection: 'row',
+    width: 64,
+    height: 64
   },
-  year: {
-    textAlign: 'center'
+  img: {
+    width: 64,
+    height: 64
   }
 });
 
+var THUMBS = [
+ '/hphotos-ak-ash3/t39.1997/p128x128/851549_767334479959628_274486868_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851561_767334496626293_1958532586_n.png',
+ '/hphotos-ak-ash3/t39.1997/p128x128/851579_767334503292959_179092627_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851589_767334513292958_1747022277_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851563_767334559959620_1193692107_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851593_767334566626286_1953955109_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851591_767334523292957_797560749_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851567_767334529959623_843148472_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851548_767334489959627_794462220_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851575_767334539959622_441598241_n.png',
+ '/hphotos-ak-ash3/t39.1997/p128x128/851573_767334549959621_534583464_n.png',
+ '/hphotos-ak-prn1/t39.1997/p128x128/851583_767334573292952_1519550680_n.png'
+].map(path => 'https://fbcdn-dragon-a.akamaihd.net' + path);
+
+THUMBS = THUMBS.concat(THUMBS); // double length of THUMBS
+
+// var createThumbRow = (uri, i) => <Thumb key={i} uri={uri} />;
+var createThumbRow = (uri, i) => uri;
+
 AppRegistry.registerComponent('WriterNative', () => WriterNative);
+
